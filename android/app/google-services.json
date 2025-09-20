@@ -14,7 +14,15 @@
       },
       "oauth_client": [
         {
-          "client_id": "611625177639-lf8quab5pl7fpbckts9lhec9fg7uejn2.apps.googleusercontent.com",
+          "client_id": "611625177639-lr2n2a4161rhcrt9ikqh3bkkps6bg6ph.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.pawplan",
+            "certificate_hash": "5c428ebd0edbd67f7d91344610db584f18386dff"
+          }
+        },
+        {
+          "client_id": "611625177639-cb9bqhs4oabn4m83nj1fr4m3fkf8vrfh.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
@@ -27,8 +35,15 @@
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "611625177639-lf8quab5pl7fpbckts9lhec9fg7uejn2.apps.googleusercontent.com",
+              "client_id": "611625177639-cb9bqhs4oabn4m83nj1fr4m3fkf8vrfh.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "611625177639-ndvudvi8o2jngfve7rbet4a5s6osiujg.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.pawplan"
+              }
             }
           ]
         }
