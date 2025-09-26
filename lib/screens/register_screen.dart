@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart'; // เพิ่ม Firebase Auth
 import 'login_screen.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -107,40 +108,115 @@ class _RegisterScreenState extends State<RegisterScreen> with TickerProviderStat
     return null;
   }
 
-  // Handle registration
+  // Handle registration - เปลี่ยนจาก simulation เป็น Firebase จริง
   void _handleRegister() async {
     if (_formKey.currentState!.validate()) {
       setState(() => _loading = true);
       
-      // Simulate API call
-      await Future.delayed(const Duration(seconds: 2));
-      
-      if (mounted) {
-        setState(() => _loading = false);
-        
-        // Show success message
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: const Row(
-              children: [
-                Icon(Icons.check_circle, color: Colors.white),
-                SizedBox(width: 10),
-                Text("✅ Account created successfully!"),
-              ],
-            ),
-            backgroundColor: Colors.green,
-            behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-          ),
+      try {
+        // สร้าง account ใน Firebase Authentication
+        UserCredential userCredential = await FirebaseAuth.instance
+            .createUserWithEmailAndPassword(
+          email: _emailController.text.trim(),
+          password: _passwordController.text.trim(),
         );
-        
-        // Navigate to login
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (_) => const LoginScreen()),
-        );
+
+        // อัพเดต display name
+        if (userCredential.user != null) {
+          await userCredential.user!.updateDisplayName(_nameController.text.trim());
+          
+          // ส่ง email verification
+          await userCredential.user!.sendEmailVerification();
+        }
+
+        if (mounted) {
+          setState(() => _loading = false);
+          
+          // Show success message
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: const Row(
+                children: [
+                  Icon(Icons.check_circle, color: Colors.white),
+                  SizedBox(width: 10),
+                  Expanded(child: Text("Account created! Please verify your email")),
+                ],
+              ),
+              backgroundColor: Colors.green,
+              behavior: SnackBarBehavior.floating,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              duration: const Duration(seconds: 4),
+            ),
+          );
+          
+          // Navigate to login
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (_) => const LoginScreen()),
+          );
+        }
+      } on FirebaseAuthException catch (e) {
+        if (mounted) {
+          setState(() => _loading = false);
+          
+          String errorMessage;
+          switch (e.code) {
+            case 'weak-password':
+              errorMessage = 'The password provided is too weak';
+              break;
+            case 'email-already-in-use':
+              errorMessage = 'An account already exists for that email';
+              break;
+            case 'invalid-email':
+              errorMessage = 'Please enter a valid email address';
+              break;
+            case 'operation-not-allowed':
+              errorMessage = 'Email/password accounts are not enabled';
+              break;
+            default:
+              errorMessage = e.message ?? 'Registration failed. Please try again';
+          }
+          
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Row(
+                children: [
+                  const Icon(Icons.error, color: Colors.white),
+                  const SizedBox(width: 10),
+                  Expanded(child: Text("❌ $errorMessage")),
+                ],
+              ),
+              backgroundColor: Colors.red,
+              behavior: SnackBarBehavior.floating,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              duration: const Duration(seconds: 4),
+            ),
+          );
+        }
+      } catch (e) {
+        if (mounted) {
+          setState(() => _loading = false);
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Row(
+                children: [
+                  const Icon(Icons.error, color: Colors.white),
+                  const SizedBox(width: 10),
+                  Expanded(child: Text("❌ Network error: $e")),
+                ],
+              ),
+              backgroundColor: Colors.red,
+              behavior: SnackBarBehavior.floating,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+          );
+        }
       }
     }
   }
