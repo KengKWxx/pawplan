@@ -185,7 +185,7 @@ class _RegisterScreenState extends State<RegisterScreen> with TickerProviderStat
                 children: [
                   const Icon(Icons.error, color: Colors.white),
                   const SizedBox(width: 10),
-                  Expanded(child: Text("❌ $errorMessage")),
+                  Expanded(child: Text(" $errorMessage")),
                 ],
               ),
               backgroundColor: Colors.red,
@@ -206,7 +206,7 @@ class _RegisterScreenState extends State<RegisterScreen> with TickerProviderStat
                 children: [
                   const Icon(Icons.error, color: Colors.white),
                   const SizedBox(width: 10),
-                  Expanded(child: Text("❌ Network error: $e")),
+                  Expanded(child: Text(" Network error: $e")),
                 ],
               ),
               backgroundColor: Colors.red,

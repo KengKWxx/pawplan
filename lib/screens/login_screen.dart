@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'register_screen.dart';
 import 'forgot_password_screen.dart';
+import 'home_screen.dart'; // เพิ่ม import นี้
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -113,9 +114,12 @@ class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin
           actions: [
             ElevatedButton(
               onPressed: () {
-                Navigator.of(context).pop(); // Close dialog
-                // TODO: Navigate to main app screen
-                print("Navigate to main app");
+                Navigator.of(context).pop();
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(
+                    builder: (_) => const HomeScreen(),
+                  ),
+                );
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.green,

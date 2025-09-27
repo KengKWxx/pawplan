@@ -128,7 +128,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
                 children: [
                   const Icon(Icons.error, color: Colors.white),
                   const SizedBox(width: 10),
-                  Expanded(child: Text("❌ $errorMessage")),
+                  Expanded(child: Text(" $errorMessage")),
                 ],
               ),
               backgroundColor: Colors.red,
@@ -149,7 +149,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
                 children: [
                   const Icon(Icons.error, color: Colors.white),
                   const SizedBox(width: 10),
-                  Expanded(child: Text("❌ Network error. Please check your connection")),
+                  Expanded(child: Text(" Network error. Please check your connection")),
                 ],
               ),
               backgroundColor: Colors.red,
