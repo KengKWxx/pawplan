@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import '../l10n/app_localizations.dart';
 import 'register_screen.dart';
 import 'forgot_password_screen.dart';
 import 'home_screen.dart'; // เพิ่ม import นี้
@@ -60,11 +61,11 @@ class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin
   // Email validation
   String? _validateEmail(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Please enter your email address';
+      return AppLocalizations.of(context)?.enterEmailAddress ?? 'Please enter your email address';
     }
     final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
     if (!emailRegex.hasMatch(value)) {
-      return 'Please enter a valid email address';
+      return AppLocalizations.of(context)?.enterValidEmailAddress ?? 'Please enter a valid email address';
     }
     return null;
   }
@@ -72,10 +73,10 @@ class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin
   // Password validation
   String? _validatePassword(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Please enter your password';
+      return AppLocalizations.of(context)?.enterPassword ?? 'Please enter your password';
     }
     if (value.length < 6) {
-      return 'Password must be at least 6 characters';
+      return AppLocalizations.of(context)?.passwordMinLength ?? 'Password must be at least 6 characters';
     }
     return null;
   }
@@ -98,8 +99,8 @@ class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin
                 size: 28,
               ),
               const SizedBox(width: 12),
-              const Text(
-                "Login Successful",
+              Text(
+                AppLocalizations.of(context)?.loginSuccessfulTitle ?? 'Login Successful',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   color: Colors.green,
@@ -107,8 +108,8 @@ class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin
               ),
             ],
           ),
-          content: const Text(
-            "Welcome back! You have successfully logged into your PawPlan account.",
+          content: Text(
+            AppLocalizations.of(context)?.loginSuccessfulMessage ?? 'Welcome back! You have successfully logged into your PawPlan account.',
             style: TextStyle(fontSize: 16),
           ),
           actions: [
@@ -129,8 +130,8 @@ class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin
                 ),
                 padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
               ),
-              child: const Text(
-                "Continue",
+              child: Text(
+                AppLocalizations.of(context)?.continueAction ?? 'Continue',
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
             ),
@@ -157,8 +158,8 @@ class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin
                 size: 28,
               ),
               const SizedBox(width: 12),
-              const Text(
-                "Email Not Found",
+              Text(
+                AppLocalizations.of(context)?.emailNotFoundTitle ?? 'Email Not Found',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   color: Colors.orange,
@@ -166,8 +167,8 @@ class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin
               ),
             ],
           ),
-          content: const Text(
-            "This email address is not registered in our system. Would you like to create a new account?",
+          content: Text(
+            AppLocalizations.of(context)?.emailNotFoundMessage ?? 'This email address is not registered in our system. Would you like to create a new account?',
             style: TextStyle(fontSize: 16),
           ),
           actions: [
@@ -176,7 +177,7 @@ class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin
                 Navigator.of(context).pop(); // Close dialog
               },
               child: Text(
-                "Cancel",
+                AppLocalizations.of(context)?.cancel ?? 'Cancel',
                 style: TextStyle(
                   color: Colors.grey.shade600,
                   fontWeight: FontWeight.w500,
@@ -201,8 +202,8 @@ class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin
                 ),
                 padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
               ),
-              child: const Text(
-                "Create Account",
+              child: Text(
+                AppLocalizations.of(context)?.createAccount ?? 'Create Account',
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
             ),
@@ -229,8 +230,8 @@ class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin
                 size: 28,
               ),
               const SizedBox(width: 12),
-              const Text(
-                "Login Failed",
+              Text(
+                AppLocalizations.of(context)?.loginFailedTitle ?? 'Login Failed',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   color: Colors.red,
@@ -238,8 +239,8 @@ class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin
               ),
             ],
           ),
-          content: const Text(
-            "The email address or password you entered is incorrect. Please check your credentials and try again.",
+          content: Text(
+            AppLocalizations.of(context)?.loginFailedMessage ?? 'The email address or password you entered is incorrect. Please check your credentials and try again.',
             style: TextStyle(fontSize: 16),
           ),
           actions: [
@@ -253,8 +254,8 @@ class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin
                   ),
                 );
               },
-              child: const Text(
-                "Forgot Password?",
+              child: Text(
+                AppLocalizations.of(context)?.forgotPasswordQuestion ?? 'Forgot Password?',
                 style: TextStyle(
                   color: Colors.blue,
                   fontWeight: FontWeight.w500,
@@ -273,8 +274,8 @@ class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin
                 ),
                 padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
               ),
-              child: const Text(
-                "Try Again",
+              child: Text(
+                AppLocalizations.of(context)?.tryAgain ?? 'Try Again',
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
             ),
@@ -314,19 +315,19 @@ class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin
               _showWrongCredentialsDialog();
               break;
             case 'too-many-requests':
-              _showErrorSnackBar("Too many failed attempts. Please try again later.");
+              _showErrorSnackBar(AppLocalizations.of(context)?.tooManyRequests ?? 'Too many failed attempts. Please try again later.');
               break;
             case 'network-request-failed':
-              _showErrorSnackBar("Network error. Please check your internet connection.");
+              _showErrorSnackBar(AppLocalizations.of(context)?.networkError ?? 'Network error. Please check your internet connection.');
               break;
             default:
-              _showErrorSnackBar("Login failed. Please try again.");
+              _showErrorSnackBar(AppLocalizations.of(context)?.genericLoginFailed ?? 'Login failed. Please try again.');
           }
         }
       } catch (e) {
         if (mounted) {
           setState(() => _loading = false);
-          _showErrorSnackBar("An unexpected error occurred. Please try again.");
+          _showErrorSnackBar(AppLocalizations.of(context)?.unexpectedError ?? 'An unexpected error occurred. Please try again.');
         }
       }
     }
@@ -423,8 +424,8 @@ class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin
             horizontal: 16,
             vertical: 16,
           ),
+          ),
         ),
-      ),
     );
   }
 
@@ -491,7 +492,7 @@ class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin
 
                             // Welcome text
                             Text(
-                              "Welcome Back!",
+                              AppLocalizations.of(context)?.welcomeBack ?? 'Welcome Back!',
                               style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                                     fontWeight: FontWeight.bold,
                                     color: Colors.brown.shade800,
@@ -500,7 +501,7 @@ class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin
                             ),
                             SizedBox(height: isLandscape ? 5 : 8),
                             Text(
-                              "Sign in to continue to PawPlan",
+                              AppLocalizations.of(context)?.signInSubtitle ?? 'Sign in to continue to PawPlan',
                               textAlign: TextAlign.center,
                               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                                     color: Colors.grey.shade600,
@@ -517,7 +518,7 @@ class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin
                                   Expanded(
                                     child: _buildTextField(
                                       controller: _emailController,
-                                      labelText: "Email address",
+                                      labelText: AppLocalizations.of(context)?.emailAddress ?? 'Email address',
                                       prefixIcon: Icons.email_outlined,
                                       keyboardType: TextInputType.emailAddress,
                                       validator: _validateEmail,
@@ -527,7 +528,7 @@ class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin
                                   Expanded(
                                     child: _buildTextField(
                                       controller: _passwordController,
-                                      labelText: "Password",
+                                      labelText: AppLocalizations.of(context)?.password ?? 'Password',
                                       prefixIcon: Icons.lock_outline,
                                       obscureText: _obscurePassword,
                                       validator: _validatePassword,
@@ -552,14 +553,14 @@ class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin
                               // Single column layout for mobile and tablet landscape
                               _buildTextField(
                                 controller: _emailController,
-                                labelText: "Email address",
+                                labelText: AppLocalizations.of(context)?.emailAddress ?? 'Email address',
                                 prefixIcon: Icons.email_outlined,
                                 keyboardType: TextInputType.emailAddress,
                                 validator: _validateEmail,
                               ),
                               _buildTextField(
                                 controller: _passwordController,
-                                labelText: "Password",
+                                labelText: AppLocalizations.of(context)?.password ?? 'Password',
                                 prefixIcon: Icons.lock_outline,
                                 obscureText: _obscurePassword,
                                 validator: _validatePassword,
@@ -592,7 +593,7 @@ class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin
                                   );
                                 },
                                 child: Text(
-                                  "Forgot password?",
+                                  AppLocalizations.of(context)?.forgotPassword ?? 'Forgot password?',
                                   style: TextStyle(
                                     color: Colors.brown.shade600,
                                     fontWeight: FontWeight.w500,
@@ -651,7 +652,7 @@ class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin
                                         ),
                                       ),
                                       child: Text(
-                                        "Log in",
+                                        AppLocalizations.of(context)?.login ?? 'Log in',
                                         style: TextStyle(
                                           fontSize: isTablet ? 18 : 16,
                                           fontWeight: FontWeight.bold,
@@ -674,7 +675,7 @@ class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin
                                 Padding(
                                   padding: const EdgeInsets.symmetric(horizontal: 16),
                                   child: Text(
-                                    "or",
+                                    AppLocalizations.of(context)?.or ?? 'or',
                                     style: TextStyle(
                                       color: Colors.grey.shade600,
                                       fontSize: isTablet ? 16 : null,
@@ -696,7 +697,7 @@ class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Text(
-                                  "Don't have an account? ",
+                                  AppLocalizations.of(context)?.dontHaveAccount ?? "Don't have an account? ",
                                   style: TextStyle(
                                     color: Colors.grey.shade600,
                                     fontSize: isTablet ? 16 : null,
@@ -712,7 +713,7 @@ class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin
                                     );
                                   },
                                   child: Text(
-                                    "Sign up",
+                                    AppLocalizations.of(context)?.signUp ?? 'Sign up',
                                     style: TextStyle(
                                       color: Colors.brown.shade600,
                                       fontWeight: FontWeight.bold,

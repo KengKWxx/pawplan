@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart'; // เพิ่ม Firebase Auth
+import '../l10n/app_localizations.dart';
 import 'login_screen.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -63,11 +64,11 @@ class _RegisterScreenState extends State<RegisterScreen> with TickerProviderStat
   // Email validation
   String? _validateEmail(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Please enter your email';
+      return AppLocalizations.of(context)?.enterEmail ?? 'Please enter your email';
     }
     final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
     if (!emailRegex.hasMatch(value)) {
-      return 'Please enter a valid email address';
+      return AppLocalizations.of(context)?.invalidEmail ?? 'Please enter a valid email address';
     }
     return null;
   }
@@ -75,10 +76,10 @@ class _RegisterScreenState extends State<RegisterScreen> with TickerProviderStat
   // Name validation
   String? _validateName(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Please enter your full name';
+      return AppLocalizations.of(context)?.enterFullName ?? 'Please enter your full name';
     }
     if (value.length < 2) {
-      return 'Name must be at least 2 characters';
+      return AppLocalizations.of(context)?.nameMinLength ?? 'Name must be at least 2 characters';
     }
     return null;
   }
@@ -86,13 +87,13 @@ class _RegisterScreenState extends State<RegisterScreen> with TickerProviderStat
   // Password validation
   String? _validatePassword(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Please enter a password';
+      return AppLocalizations.of(context)?.enterAPassword ?? 'Please enter a password';
     }
     if (value.length < 6) {
-      return 'Password must be at least 6 characters';
+      return AppLocalizations.of(context)?.passwordMinLength ?? 'Password must be at least 6 characters';
     }
     if (!RegExp(r'^(?=.*[a-zA-Z])(?=.*[0-9])').hasMatch(value)) {
-      return 'Password must contain letters and numbers';
+      return AppLocalizations.of(context)?.passwordLettersNumbers ?? 'Password must contain letters and numbers';
     }
     return null;
   }
@@ -100,10 +101,10 @@ class _RegisterScreenState extends State<RegisterScreen> with TickerProviderStat
   // Confirm password validation
   String? _validateConfirmPassword(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Please confirm your password';
+      return AppLocalizations.of(context)?.confirmYourPassword ?? 'Please confirm your password';
     }
     if (value != _passwordController.text) {
-      return 'Passwords do not match';
+      return AppLocalizations.of(context)?.passwordsDoNotMatch ?? 'Passwords do not match';
     }
     return null;
   }
@@ -135,11 +136,11 @@ class _RegisterScreenState extends State<RegisterScreen> with TickerProviderStat
           // Show success message
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: const Row(
+              content: Row(
                 children: [
                   Icon(Icons.check_circle, color: Colors.white),
                   SizedBox(width: 10),
-                  Expanded(child: Text("Account created! Please verify your email")),
+                  Expanded(child: Text(AppLocalizations.of(context)?.accountCreatedVerify ?? 'Account created! Please verify your email')),
                 ],
               ),
               backgroundColor: Colors.green,
@@ -164,19 +165,19 @@ class _RegisterScreenState extends State<RegisterScreen> with TickerProviderStat
           String errorMessage;
           switch (e.code) {
             case 'weak-password':
-              errorMessage = 'The password provided is too weak';
+              errorMessage = AppLocalizations.of(context)?.weakPassword ?? 'The password provided is too weak';
               break;
             case 'email-already-in-use':
-              errorMessage = 'An account already exists for that email';
+              errorMessage = AppLocalizations.of(context)?.emailAlreadyInUse ?? 'An account already exists for that email';
               break;
             case 'invalid-email':
-              errorMessage = 'Please enter a valid email address';
+              errorMessage = AppLocalizations.of(context)?.invalidEmail ?? 'Please enter a valid email address';
               break;
             case 'operation-not-allowed':
-              errorMessage = 'Email/password accounts are not enabled';
+              errorMessage = AppLocalizations.of(context)?.operationNotAllowed ?? 'Email/password accounts are not enabled';
               break;
             default:
-              errorMessage = e.message ?? 'Registration failed. Please try again';
+              errorMessage = e.message ?? (AppLocalizations.of(context)?.registrationFailed ?? 'Registration failed. Please try again');
           }
           
           ScaffoldMessenger.of(context).showSnackBar(
@@ -213,8 +214,8 @@ class _RegisterScreenState extends State<RegisterScreen> with TickerProviderStat
               behavior: SnackBarBehavior.floating,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10),
-              ),
-            ),
+          ),
+        ),
           );
         }
       }
@@ -359,7 +360,7 @@ class _RegisterScreenState extends State<RegisterScreen> with TickerProviderStat
 
                             // Welcome text
                             Text(
-                              "Create Account",
+                              AppLocalizations.of(context)?.createAccountTitle ?? 'Create Account',
                               style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                                 fontWeight: FontWeight.bold,
                                 color: Colors.brown.shade800,
@@ -368,7 +369,7 @@ class _RegisterScreenState extends State<RegisterScreen> with TickerProviderStat
                             ),
                             SizedBox(height: isLandscape ? 5 : 8),
                             Text(
-                              "Join PawPlan to take care of your pets",
+                              AppLocalizations.of(context)?.createAccountSubtitle ?? 'Join PawPlan to take care of your pets',
                               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                                 color: Colors.grey.shade600,
                                 fontSize: isTablet ? 16 : null,
@@ -384,7 +385,7 @@ class _RegisterScreenState extends State<RegisterScreen> with TickerProviderStat
                                   Expanded(
                                     child: _buildTextField(
                                       controller: _nameController,
-                                      labelText: "Full Name",
+                                      labelText: AppLocalizations.of(context)?.fullName ?? 'Full Name',
                                       prefixIcon: Icons.person_outline,
                                       validator: _validateName,
                                     ),
@@ -393,7 +394,7 @@ class _RegisterScreenState extends State<RegisterScreen> with TickerProviderStat
                                   Expanded(
                                     child: _buildTextField(
                                       controller: _emailController,
-                                      labelText: "Email address",
+                                      labelText: AppLocalizations.of(context)?.emailAddress ?? 'Email address',
                                       prefixIcon: Icons.email_outlined,
                                       keyboardType: TextInputType.emailAddress,
                                       validator: _validateEmail,
@@ -406,7 +407,7 @@ class _RegisterScreenState extends State<RegisterScreen> with TickerProviderStat
                                   Expanded(
                                     child: _buildTextField(
                                       controller: _passwordController,
-                                      labelText: "Password",
+                                      labelText: AppLocalizations.of(context)?.password ?? 'Password',
                                       prefixIcon: Icons.lock_outline,
                                       obscureText: _obscurePassword,
                                       validator: _validatePassword,
@@ -429,7 +430,7 @@ class _RegisterScreenState extends State<RegisterScreen> with TickerProviderStat
                                   Expanded(
                                     child: _buildTextField(
                                       controller: _confirmController,
-                                      labelText: "Confirm password",
+                                      labelText: AppLocalizations.of(context)?.confirmPassword ?? 'Confirm password',
                                       prefixIcon: Icons.lock_outline,
                                       obscureText: _obscureConfirmPassword,
                                       validator: _validateConfirmPassword,
@@ -454,20 +455,20 @@ class _RegisterScreenState extends State<RegisterScreen> with TickerProviderStat
                               // Single column layout for mobile and tablet landscape
                               _buildTextField(
                                 controller: _nameController,
-                                labelText: "Full Name",
+                                labelText: AppLocalizations.of(context)?.fullName ?? 'Full Name',
                                 prefixIcon: Icons.person_outline,
                                 validator: _validateName,
                               ),
                               _buildTextField(
                                 controller: _emailController,
-                                labelText: "Email address",
+                                labelText: AppLocalizations.of(context)?.emailAddress ?? 'Email address',
                                 prefixIcon: Icons.email_outlined,
                                 keyboardType: TextInputType.emailAddress,
                                 validator: _validateEmail,
                               ),
                               _buildTextField(
                                 controller: _passwordController,
-                                labelText: "Password",
+                                labelText: AppLocalizations.of(context)?.password ?? 'Password',
                                 prefixIcon: Icons.lock_outline,
                                 obscureText: _obscurePassword,
                                 validator: _validatePassword,
@@ -487,7 +488,7 @@ class _RegisterScreenState extends State<RegisterScreen> with TickerProviderStat
                               ),
                               _buildTextField(
                                 controller: _confirmController,
-                                labelText: "Confirm password",
+                                labelText: AppLocalizations.of(context)?.confirmPassword ?? 'Confirm password',
                                 prefixIcon: Icons.lock_outline,
                                 obscureText: _obscureConfirmPassword,
                                 validator: _validateConfirmPassword,
@@ -557,7 +558,7 @@ class _RegisterScreenState extends State<RegisterScreen> with TickerProviderStat
                                         ),
                                       ),
                                       child: Text(
-                                        "Sign Up",
+                                        AppLocalizations.of(context)?.signUpBtn ?? 'Sign Up',
                                         style: TextStyle(
                                           fontSize: isTablet ? 18 : 16,
                                           fontWeight: FontWeight.bold,
@@ -580,7 +581,7 @@ class _RegisterScreenState extends State<RegisterScreen> with TickerProviderStat
                                 Padding(
                                   padding: const EdgeInsets.symmetric(horizontal: 16),
                                   child: Text(
-                                    "or",
+                                    AppLocalizations.of(context)?.or ?? 'or',
                                     style: TextStyle(
                                       color: Colors.grey.shade600,
                                       fontSize: isTablet ? 16 : null,
@@ -602,7 +603,7 @@ class _RegisterScreenState extends State<RegisterScreen> with TickerProviderStat
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Text(
-                                  "Already have an account? ",
+                                  AppLocalizations.of(context)?.alreadyHaveAccount ?? 'Already have an account? ',
                                   style: TextStyle(
                                     color: Colors.grey.shade600,
                                     fontSize: isTablet ? 16 : null,
@@ -618,7 +619,7 @@ class _RegisterScreenState extends State<RegisterScreen> with TickerProviderStat
                                     );
                                   },
                                   child: Text(
-                                    "Log in",
+                                    AppLocalizations.of(context)?.logIn ?? 'Log in',
                                     style: TextStyle(
                                       color: Colors.brown.shade600,
                                       fontWeight: FontWeight.bold,

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import '../l10n/app_localizations.dart';
+import '../widgets/language_corner_button.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
   const ForgotPasswordScreen({super.key});
@@ -56,7 +58,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
   // Email validation
   String? _validateEmail(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Please enter your email address';
+      return AppLocalizations.of(context)?.enterEmailAddress ?? 'Please enter your email address';
     }
 
     // Remove whitespace
@@ -65,7 +67,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
     // Check email format
     final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
     if (!emailRegex.hasMatch(value)) {
-      return 'Please enter a valid email address';
+      return AppLocalizations.of(context)?.enterValidEmailAddress ?? 'Please enter a valid email address';
     }
 
     return null;
@@ -87,11 +89,11 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
 
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: const Row(
+              content: Row(
                 children: [
                   Icon(Icons.check_circle, color: Colors.white),
                   SizedBox(width: 10),
-                  Expanded(child: Text("📧 Password reset link sent to your email")),
+                  Expanded(child: Text(AppLocalizations.of(context)?.passwordResetSent ?? '📧 Password reset link sent to your email')),
                 ],
               ),
               backgroundColor: Colors.green,
@@ -110,16 +112,16 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
           String errorMessage;
           switch (e.code) {
             case 'user-not-found':
-              errorMessage = 'No account found with this email address';
+              errorMessage = AppLocalizations.of(context)?.noAccountWithEmail ?? 'No account found with this email address';
               break;
             case 'invalid-email':
-              errorMessage = 'Please enter a valid email address';
+              errorMessage = AppLocalizations.of(context)?.invalidEmail ?? 'Please enter a valid email address';
               break;
             case 'too-many-requests':
-              errorMessage = 'Too many requests. Please try again later';
+              errorMessage = AppLocalizations.of(context)?.tooManyRequestsShort ?? 'Too many requests. Please try again later';
               break;
             default:
-              errorMessage = e.message ?? 'An error occurred. Please try again';
+              errorMessage = e.message ?? (AppLocalizations.of(context)?.errorOccurred ?? 'An error occurred. Please try again');
           }
 
           ScaffoldMessenger.of(context).showSnackBar(
@@ -149,7 +151,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
                 children: [
                   const Icon(Icons.error, color: Colors.white),
                   const SizedBox(width: 10),
-                  Expanded(child: Text(" Network error. Please check your connection")),
+                  Expanded(child: Text(" ${AppLocalizations.of(context)?.networkError ?? 'Network error. Please check your internet connection.'}")),
                 ],
               ),
               backgroundColor: Colors.red,
@@ -182,9 +184,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
         textInputAction: TextInputAction.done,
         onFieldSubmitted: (_) => _resetPassword(),
         decoration: InputDecoration(
-          labelText: "Email address",
-          hintText: "Enter your email",
-          helperText: "We'll send a password reset link to this email",
+          labelText: AppLocalizations.of(context)?.emailAddress ?? 'Email address',
+          hintText: AppLocalizations.of(context)?.enterYourEmail ?? 'Enter your email',
+          helperText: AppLocalizations.of(context)?.resetHelper ?? "We'll send a password reset link to this email",
           helperStyle: TextStyle(
             color: Colors.grey.shade500,
             fontSize: 12,
@@ -257,7 +259,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
 
         // Success title
         Text(
-          "Check Your Email!",
+          AppLocalizations.of(context)?.checkYourEmailTitle ?? 'Check Your Email!',
           style: Theme.of(context).textTheme.headlineMedium?.copyWith(
             fontWeight: FontWeight.bold,
             color: Colors.green.shade700,
@@ -268,7 +270,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
 
         // Success description
         Text(
-          "We've sent a password reset link to\n${_emailController.text.trim()}",
+          "${AppLocalizations.of(context)?.passwordResetSent ?? '📧 Password reset link sent to your email'}\n${_emailController.text.trim()}",
           textAlign: TextAlign.center,
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
             color: Colors.grey.shade600,
@@ -295,7 +297,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
               ),
               const SizedBox(height: 8),
               Text(
-                "Please check your email and click the reset link to create a new password",
+                AppLocalizations.of(context)?.forgotPasswordDesc ?? "Don't worry! Enter your email address and we'll send you a reset link",
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: Colors.blue.shade700,
@@ -320,7 +322,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
             color: Colors.brown.shade600,
           ),
           label: Text(
-            "Didn't receive email? Try again",
+            AppLocalizations.of(context)?.didntReceiveEmail ?? "Didn't receive email? Try again",
             style: TextStyle(
               color: Colors.brown.shade600,
               fontWeight: FontWeight.w500,
@@ -338,234 +340,234 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
     final screenHeight = MediaQuery.of(context).size.height;
     final isTablet = screenWidth > 600;
     final isLandscape = screenWidth > screenHeight;
-    final isDesktop = screenWidth > 1200;
 
     return Scaffold(
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              Colors.brown.shade50,
-              Colors.orange.shade50,
-              Colors.amber.shade50,
-            ],
-          ),
-        ),
-        child: SafeArea(
-          child: Center(
-            child: SingleChildScrollView(
-              padding: EdgeInsets.symmetric(
-                horizontal: isDesktop ? screenWidth * 0.3 :
-                           isTablet ? screenWidth * 0.2 : 24,
-                vertical: isLandscape ? 16 : 24,
+      body: Stack(
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  Colors.brown.shade50,
+                  Colors.orange.shade50,
+                  Colors.amber.shade50,
+                ],
               ),
-              child: FadeTransition(
-                opacity: _fadeAnimation,
-                child: SlideTransition(
-                  position: _slideAnimation,
-                  child: Card(
-                    elevation: 10,
-                    shadowColor: Colors.brown.withOpacity(0.3),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Container(
-                      constraints: BoxConstraints(
-                        maxWidth: isDesktop ? 600 : isTablet ? 500 : double.infinity,
+            ),
+          child: SafeArea(
+            child: Center(
+              child: SingleChildScrollView(
+                padding: EdgeInsets.symmetric(
+                  horizontal: isTablet ? screenWidth * 0.2 : 24,
+                  vertical: isLandscape ? 16 : 24,
+                ),
+                child: FadeTransition(
+                  opacity: _fadeAnimation,
+                  child: SlideTransition(
+                    position: _slideAnimation,
+                    child: Card(
+                      elevation: 10,
+                      shadowColor: Colors.brown.withOpacity(0.3),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
                       ),
-                      padding: EdgeInsets.all(isTablet ? 40 : 32),
-                      child: _emailSent
-                          ? _buildSuccessContent(
-                              isTablet: isTablet,
-                              isLandscape: isLandscape,
-                            )
-                          : Form(
-                              key: _formKey,
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  // Back button
-                                  Align(
-                                    alignment: Alignment.centerLeft,
-                                    child: IconButton(
-                                      onPressed: () => Navigator.pop(context),
-                                      icon: Icon(
-                                        Icons.arrow_back_ios,
-                                        color: Colors.brown.shade600,
-                                        size: isTablet ? 28 : 24,
+                      child: Container(
+                        constraints: BoxConstraints(
+                          maxWidth: isTablet ? 520 : double.infinity,
+                        ),
+                        padding: EdgeInsets.all(isTablet ? 40 : 32),
+                        child: _emailSent
+                            ? _buildSuccessContent(isTablet: isTablet, isLandscape: isLandscape)
+                            : Form(
+                                key: _formKey,
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    // Back button
+                                    Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: IconButton(
+                                        onPressed: () => Navigator.pop(context),
+                                        icon: Icon(
+                                          Icons.arrow_back_ios,
+                                          color: Colors.brown.shade600,
+                                          size: isTablet ? 28 : 24,
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                  SizedBox(height: isLandscape ? 5 : 10),
+                                    SizedBox(height: isLandscape ? 5 : 10),
 
-                                  // Icon
-                                  Container(
-                                    padding: const EdgeInsets.all(20),
-                                    decoration: BoxDecoration(
-                                      color: Colors.brown.shade50,
-                                      shape: BoxShape.circle,
+                                    // Icon
+                                    Container(
+                                      padding: const EdgeInsets.all(20),
+                                      decoration: BoxDecoration(
+                                        color: Colors.brown.shade50,
+                                        shape: BoxShape.circle,
+                                      ),
+                                      child: Icon(
+                                        Icons.lock_reset,
+                                        size: isTablet ? 80 : 60,
+                                        color: Colors.brown.shade400,
+                                      ),
                                     ),
-                                    child: Icon(
-                                      Icons.lock_reset,
-                                      size: isTablet ? 80 : 60,
-                                      color: Colors.brown.shade400,
+                                    SizedBox(height: isLandscape ? 20 : 30),
+
+                                    // Title text
+                                    Text(
+                                      AppLocalizations.of(context)?.forgotPasswordTitle ?? 'Forgot Password?',
+                                      style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.brown.shade800,
+                                        fontSize: isTablet ? 32 : null,
+                                      ),
                                     ),
-                                  ),
-                                  SizedBox(height: isLandscape ? 20 : 30),
+                                    SizedBox(height: isLandscape ? 8 : 12),
 
-                                  // Title text
-                                  Text(
-                                    "Forgot Password?",
-                                    style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.brown.shade800,
-                                      fontSize: isTablet ? 32 : null,
+                                    // Description text
+                                    Text(
+                                      AppLocalizations.of(context)?.forgotPasswordDesc ?? "Don't worry! Enter your email address and we'll send you a reset link",
+                                      textAlign: TextAlign.center,
+                                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                        color: Colors.grey.shade600,
+                                        height: 1.5,
+                                        fontSize: isTablet ? 16 : null,
+                                      ),
                                     ),
-                                  ),
-                                  SizedBox(height: isLandscape ? 8 : 12),
+                                    SizedBox(height: isLandscape ? 30 : 40),
 
-                                  // Description text
-                                  Text(
-                                    "Don't worry! Enter your email address and we'll send you a reset link",
-                                    textAlign: TextAlign.center,
-                                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                      color: Colors.grey.shade600,
-                                      height: 1.5,
-                                      fontSize: isTablet ? 16 : null,
-                                    ),
-                                  ),
-                                  SizedBox(height: isLandscape ? 30 : 40),
+                                    // Email field
+                                    _buildEmailField(isTablet: isTablet),
+                                    SizedBox(height: isLandscape ? 20 : 30),
 
-                                  // Email field
-                                  _buildEmailField(isTablet: isTablet),
-                                  SizedBox(height: isLandscape ? 20 : 30),
-
-                                  // Reset button
-                                  _loading
-                                      ? Container(
-                                          height: 55,
-                                          decoration: BoxDecoration(
-                                            gradient: LinearGradient(
-                                              colors: [
-                                                Colors.brown.shade300,
-                                                Colors.brown.shade400,
-                                              ],
-                                            ),
-                                            borderRadius: BorderRadius.circular(15),
-                                          ),
-                                          child: const Center(
-                                            child: CircularProgressIndicator(
-                                              color: Colors.white,
-                                            ),
-                                          ),
-                                        )
-                                      : Container(
-                                          width: double.infinity,
-                                          height: 55,
-                                          decoration: BoxDecoration(
-                                            gradient: LinearGradient(
-                                              colors: [
-                                                Colors.brown.shade300,
-                                                Colors.brown.shade400,
-                                              ],
-                                            ),
-                                            borderRadius: BorderRadius.circular(15),
-                                            boxShadow: [
-                                              BoxShadow(
-                                                color: Colors.brown.withOpacity(0.3),
-                                                blurRadius: 10,
-                                                offset: const Offset(0, 5),
+                                    // Reset button
+                                    _loading
+                                        ? Container(
+                                            height: 55,
+                                            decoration: BoxDecoration(
+                                              gradient: LinearGradient(
+                                                colors: [
+                                                  Colors.brown.shade300,
+                                                  Colors.brown.shade400,
+                                                ],
                                               ),
-                                            ],
-                                          ),
-                                          child: ElevatedButton(
-                                            onPressed: _resetPassword,
-                                            style: ElevatedButton.styleFrom(
-                                              backgroundColor: Colors.transparent,
-                                              shadowColor: Colors.transparent,
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius: BorderRadius.circular(15),
-                                              ),
+                                              borderRadius: BorderRadius.circular(15),
                                             ),
-                                            child: Text(
-                                              "Send Reset Link",
-                                              style: TextStyle(
-                                                fontSize: isTablet ? 18 : 16,
-                                                fontWeight: FontWeight.bold,
+                                            child: const Center(
+                                              child: CircularProgressIndicator(
                                                 color: Colors.white,
                                               ),
                                             ),
-                                          ),
-                                        ),
-                                  SizedBox(height: isLandscape ? 20 : 30),
-
-                                  // Help text
-                                  Container(
-                                    padding: const EdgeInsets.all(12),
-                                    decoration: BoxDecoration(
-                                      color: Colors.grey.shade50,
-                                      borderRadius: BorderRadius.circular(10),
-                                      border: Border.all(color: Colors.grey.shade200),
-                                    ),
-                                    child: Row(
-                                      children: [
-                                        Icon(
-                                          Icons.help_outline,
-                                          color: Colors.grey.shade600,
-                                          size: 20,
-                                        ),
-                                        const SizedBox(width: 8),
-                                        Expanded(
-                                          child: Text(
-                                            "Check your spam folder if you don't receive the email within a few minutes",
-                                            style: TextStyle(
-                                              color: Colors.grey.shade600,
-                                              fontSize: isTablet ? 14 : 12,
+                                          )
+                                        : Container(
+                                            width: double.infinity,
+                                            height: 55,
+                                            decoration: BoxDecoration(
+                                              gradient: LinearGradient(
+                                                colors: [
+                                                  Colors.brown.shade300,
+                                                  Colors.brown.shade400,
+                                                ],
+                                              ),
+                                              borderRadius: BorderRadius.circular(15),
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: Colors.brown.withOpacity(0.3),
+                                                  blurRadius: 10,
+                                                  offset: const Offset(0, 5),
+                                                ),
+                                              ],
+                                            ),
+                                            child: ElevatedButton(
+                                              onPressed: _resetPassword,
+                                              style: ElevatedButton.styleFrom(
+                                                backgroundColor: Colors.transparent,
+                                                shadowColor: Colors.transparent,
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius: BorderRadius.circular(15),
+                                                ),
+                                              ),
+                                              child: Text(
+                                                AppLocalizations.of(context)?.sendResetLink ?? 'Send Reset Link',
+                                                style: TextStyle(
+                                                  fontSize: isTablet ? 18 : 16,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.white,
+                                                ),
+                                              ),
                                             ),
                                           ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  SizedBox(height: isLandscape ? 15 : 20),
+                                    SizedBox(height: isLandscape ? 20 : 30),
 
-                                  // Remember password section
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        "Remember your password? ",
-                                        style: TextStyle(
-                                          color: Colors.grey.shade600,
-                                          fontSize: isTablet ? 16 : null,
-                                        ),
+                                    // Help text
+                                    Container(
+                                      padding: const EdgeInsets.all(12),
+                                      decoration: BoxDecoration(
+                                        color: Colors.grey.shade50,
+                                        borderRadius: BorderRadius.circular(10),
+                                        border: Border.all(color: Colors.grey.shade200),
                                       ),
-                                      GestureDetector(
-                                        onTap: () => Navigator.pop(context),
-                                        child: Text(
-                                          "Back to Login",
+                                      child: Row(
+                                        children: [
+                                          Icon(
+                                            Icons.help_outline,
+                                            color: Colors.grey.shade600,
+                                            size: 20,
+                                          ),
+                                          const SizedBox(width: 8),
+                                          Expanded(
+                                            child: Text(
+                                              AppLocalizations.of(context)?.checkSpam ?? 'Check your spam folder if you don\'t receive the email within a few minutes',
+                                              style: TextStyle(
+                                                color: Colors.grey.shade600,
+                                                fontSize: isTablet ? 14 : 12,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    SizedBox(height: isLandscape ? 15 : 20),
+
+                                    // Remember password section
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          AppLocalizations.of(context)?.rememberPassword ?? 'Remember your password? ',
                                           style: TextStyle(
-                                            color: Colors.brown.shade600,
-                                            fontWeight: FontWeight.bold,
-                                            decoration: TextDecoration.underline,
+                                            color: Colors.grey.shade600,
                                             fontSize: isTablet ? 16 : null,
                                           ),
                                         ),
-                                      )
-                                    ],
-                                  )
-                                ],
+                                        GestureDetector(
+                                          onTap: () => Navigator.pop(context),
+                                          child: Text(
+                                            AppLocalizations.of(context)?.backToLogin ?? 'Back to Login',
+                                            style: TextStyle(
+                                              color: Colors.brown.shade600,
+                                              fontWeight: FontWeight.bold,
+                                              decoration: TextDecoration.underline,
+                                              fontSize: isTablet ? 16 : null,
+                                            ),
+                                          ),
+                                        )
+                                      ],
+                                    )
+                                  ],
+                                ),
                               ),
-                            ),
+                        ),
+                      ),
                     ),
                   ),
                 ),
               ),
             ),
           ),
-        ),
+          const LanguageCornerButton(),
+        ],
       ),
     );
   }
