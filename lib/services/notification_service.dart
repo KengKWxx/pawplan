@@ -108,9 +108,7 @@ class NotificationService {
           presentSound: true,
         ),
       ),
-      androidAllowWhileIdle: true, // สำหรับ Android 10
-      uiLocalNotificationDateInterpretation:
-          UILocalNotificationDateInterpretation.absoluteTime, // ← ต้องมี
+      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
       payload: 'scheduled',
     );
 
